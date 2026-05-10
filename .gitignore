@@ -45,7 +45,7 @@ _sidebar.md
 ###############
 *.class
 *.log
-*.jar
+# *.jar
 hs_err_pid*
 replay_pid*
 *.hprof
