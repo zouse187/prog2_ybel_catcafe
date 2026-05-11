@@ -8,27 +8,47 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-test-format:
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    job1:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v4
+          - name: Set up JDK
+            uses: actions/setup-java@v4
+            with:
+              distribution: temurin
+              java-version: '25'
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '25'
+          - name: Build project
+            run: ./gradlew build
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+    job2:
+        needs: job1
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Set up JDK
+              uses: actions/setup-java@v4
+              with:
+                distribution: temurin
+                java-version: '25'
 
-      - name: Build project
-        run: ./gradlew build
+            - name: Run tests
+              run: ./gradlew test
 
-      - name: Run tests
-        run: ./gradlew test
+    job3:
+        needs: job1
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Set up JDK
+              uses: actions/setup-java@v4
+              with:
+                distribution: temurin
+                java-version: '25'
 
-      - name: Check formatting
-        run: ./gradlew spotlessCheck
+            - name: Check formatting
+              run: ./gradlew spotlessCheck
