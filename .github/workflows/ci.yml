@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-    job1:
+    build:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -20,13 +20,11 @@ jobs:
                 distribution: temurin
                 java-version: '25'
 
-            - name: Build project
-              uses: gradle/wrapper-validation-action@v1
             - run: chmod +x ./gradlew
-            - run: ./gradlew build
+            - run: ./gradlew classes
 
-    job2:
-        needs: job1
+    junit:
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -37,13 +35,11 @@ jobs:
                 distribution: temurin
                 java-version: '25'
 
-            - name: Run tests
-              uses: gradle/wrapper-validation-action@v1
             - run: chmod +x ./gradlew
             - run: ./gradlew test
 
-    job3:
-        needs: job1
+    spotless:
+        needs: build
         runs-on: ubuntu-latest
         steps:
             - name: Checkout repository
@@ -54,7 +50,5 @@ jobs:
                 distribution: temurin
                 java-version: '25'
 
-            - name: Check formatting
-              uses: gradle/wrapper-validation-action@v1
             - run: chmod +x ./gradlew
             - run: ./gradlew spotlessCheck
